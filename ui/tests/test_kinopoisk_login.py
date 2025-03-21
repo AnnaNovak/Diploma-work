@@ -1,68 +1,30 @@
 import allure
-import pytest
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from ui.pages.kinopoisk_login_page import KinopoiskLoginPage
-from api.clients.kinopoisk_client import KinopoiskClient
+from config.settings import Settings
 
-# убрать тест или заменить на невалидный тест
-@pytest.fixture(scope="function")
-def driver():
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-    yield driver
-    driver.quit()
 
 @allure.feature("UI Тесты")
 @allure.story("Авторизация на Кинопоиске")
 def test_kinopoisk_login(driver):
     login_page = KinopoiskLoginPage(driver)
 
-    with allure.step("Открыть главную страницу Кинопоиска"):
+    with allure.step("Открыть страницу входа"):
         login_page.open_login_page()
 
-    with allure.step("Ввести email"):
-        login_page.enter_email("your_email@example.com")
+    with allure.step("Закрыть модальное окно если есть"):
+        login_page.close_modal()
 
-    with allure.step("Ввести пароль"):
-        login_page.enter_password("your_password")
+    with allure.step("Нажать кнопку 'войти'"):
+        login_page.click_login_button()
 
-    with allure.step("Отправить форму авторизации"):
-        login_page.submit_login_form()
+    with allure.step("Ввести номер телефона"):
+        login_page.enter_phone_number(Settings.USER_PHONE)
 
-    with allure.step("Проверить успешность авторизации"):
-        assert login_page.is_profile_link_visible(), "Авторизация не удалась!"
+    with allure.step("Нажать кнопку 'Войти'"):
+        login_page.submit_phone_number()
 
-    allure.attach(driver.get_screenshot_as_png(), name="Скриншот после авторизации", attachment_type=allure.attachment_type.PNG)
+    with allure.step("Выбрать профиль 'Мой профиль'"):
+        login_page.select_profile("Мой профиль")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#авторизация
-#поиск фильма по названию
-#поиск фильма по жанру
-#оценить фильм
-#поиск с пустым полем
-#добавить фильм в закладки
+    with allure.step("Проверить, что пользователь авторизован"):
+        assert login_page.is_logged_in(), "Пользователь не авторизован"
