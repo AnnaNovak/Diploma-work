@@ -17,7 +17,7 @@ def test_kinopoisk_login(driver):
     with allure.step("Нажать кнопку 'войти'"):
         login_page.click_login_button()
 
-    with allure.step("Ввести номер телефона"):
+    with allure.step("0000000000"): # ввести свой номер телефона
         login_page.enter_phone_number(Settings.USER_PHONE)
 
     with allure.step("Нажать кнопку 'Войти'"):

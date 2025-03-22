@@ -19,10 +19,10 @@ class KinopoiskSearchPage(BasePage):
         self.driver.get("https://www.kinopoisk.ru/")
 
     def close_modal(self):
-
         self.wait.until(
-            EC.element_to_be_clickable(self.CLOSE_MODAL)
+        EC.element_to_be_clickable(self.CLOSE_MODAL)
         ).click()
+
 
     def search_movie_by_phrase(self, title):
         self.send_keys(self.SEARCH_FIELD, title)
@@ -32,12 +32,14 @@ class KinopoiskSearchPage(BasePage):
     def get_search_results(self):
         return self.is_visible(self.SEARCH_RESULTS)
 
-    def get_first_movie_title(self,film_id):
-        movie_title = (By.CSS_SELECTOR , f"[data-id='{film_id}']")
-        print(movie_title)
-        self.wait.until(EC.presence_of_element_located(movie_title))
+    def search_for_movie(self, movie_name):
+        self.send_keys(('name', 'kp_query'), movie_name)
+        self.click(('xpath', '//button[@type="submit"]'))
 
-        title = self.driver.find_element(movie_title)
-        print(title)
-        return title
+
+    def get_first_result_title(self):
+        #return self.find_element(('xpath', '//div[@class="element most_wanted"]//a[@class="name"]')).text
+        return self.find_element(
+            ('css selector', "div[class='element most_wanted'] div[class='info'] a[class='js-serp-metrika']")).text
+
 

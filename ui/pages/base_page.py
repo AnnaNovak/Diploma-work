@@ -15,3 +15,12 @@ class BasePage:
 
     def is_visible(self, by_locator):
         return self.wait.until(EC.visibility_of_element_located(by_locator))
+
+    def open(self, url):
+        self.driver.get(url)
+
+    def find_element(self, locator):
+        return self.wait.until(EC.presence_of_element_located(locator))
+
+    def find_elements(self, locator):
+        return self.wait.until(EC.presence_of_all_elements_located(locator))
